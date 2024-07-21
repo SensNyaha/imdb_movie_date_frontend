@@ -11,14 +11,17 @@ export const load: LayoutServerLoad = async ({cookies, fetch}) => {
 			cookies.delete("accessToken", {path: "/"});
 			return {
 				user: null,
+				lastServerError: "AccessToken deleted cause couldn't get user's info",
 			}
 		}
 		return {
 			user: jsoned.data,
 		}
 	} catch (e) {
+		console.error(e);
 		return {
 			user: null,
+			lastServerError: "AccessToken deleted cause couldn't get user's info",
 		}
 	}
 }

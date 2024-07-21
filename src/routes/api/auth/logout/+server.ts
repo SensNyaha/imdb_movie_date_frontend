@@ -1,10 +1,10 @@
 import { error, redirect, type RequestHandler } from '@sveltejs/kit';
-import { SERVER } from '$env/static/private';
+import { PUBLIC_SERVER_URL } from '$env/static/public';
 import catchHelper from '$lib/catchHelper';
 
 export const POST: RequestHandler = async ({ fetch, cookies}) => {
 	try {
-		const res = await fetch(`${SERVER}/api/v1/users/logout`, {
+		const res = await fetch(`${PUBLIC_SERVER_URL}/api/v1/users/logout`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -13,6 +13,7 @@ export const POST: RequestHandler = async ({ fetch, cookies}) => {
 		});
 		const jsoned = await res.json();
 		if (!jsoned.success) throw error(res.status,  jsoned.message || res.statusText);
+
 		cookies.delete("accessToken", {path: "/"});
 		throw redirect(303, "/")
 	} catch (e) {

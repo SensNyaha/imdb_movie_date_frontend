@@ -8,18 +8,17 @@
 	import { getContext, onMount } from 'svelte';
 	import { error } from '@sveltejs/kit';
 	import type { Writable } from 'svelte/store';
+	import type { CustomError } from '$lib';
 
 	const errorStore: Writable<null | string> = getContext("errorContext");
 
-	onMount(() => {
-		if ($page.url.searchParams.get("message") != null) {
-			alert($page.url.searchParams.get("message"))
-		}
-	})
+	// onMount(() => {
+	// 	if ($page.url.searchParams.get("message") != null) {
+	// 		alert($page.url.searchParams.get("message"))
+	// 	}
+	// })
 
-</script>
-<!---->
-<form method="POST" action="?/login" on:submit|preventDefault={async () => {
+	const loginHandler = async () => {
 		try {
 			const res = await fetch("/api/auth/login", {
 				method: "POST",
@@ -28,17 +27,22 @@
 					"Content-Type": "application/json",
 				}
 			});
-			const jsoned = await res.json();
-			if (res.ok) {
+			if (res.ok || res.redirected) {
 				await invalidateAll();
 			} else {
+				const jsoned = await res.json();
 				throw error(res.status, jsoned.message || res.statusText);
 			}
 		} catch (e) {
-			errorStore.set("Error while loging out: " + (e?.body?.message || e.message || ""));
-			setTimeout(() => errorStore.set(""), 2000)
+			let customedError = e as CustomError;
+			errorStore.set("Error while loging out: " + (customedError?.body?.message || customedError.message || ""));
+			// setTimeout(() => errorStore.set(""), 2000)
 		}
-}}>
+	}
+
+</script>
+<!---->
+<form method="POST" action="?/login" on:submit|preventDefault={loginHandler}>
 	<input type="text" bind:value={email} name="email" required>
 	<input type="password" bind:value={password} name="password" required>
 	<button>LOGIN</button>

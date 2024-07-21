@@ -1,13 +1,12 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit';
-import { SERVER } from '$env/static/private';
+import { PUBLIC_SERVER_URL } from '$env/static/public';
 import catchHelper from '$lib/catchHelper';
 
 export const GET: RequestHandler  = async ({cookies}) => {
 	try {
-		const res = await fetch(`${SERVER}/api/v1/users/my`, {
+		const res = await fetch(`${PUBLIC_SERVER_URL}/api/v1/users/my`, {
 			headers: {"Authorization": `Bearer ${cookies.get("accessToken")}`}
 		})
-		console.log(res)
 		const jsoned = await res.json();
 		// message из http пакета видно только в jsoned.message
 

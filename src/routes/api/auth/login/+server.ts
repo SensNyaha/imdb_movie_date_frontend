@@ -1,11 +1,11 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit';
-import { SERVER } from '$env/static/private';
+import { PUBLIC_SERVER_URL } from '$env/static/public';
 import catchHelper from '$lib/catchHelper';
 
 export const POST: RequestHandler = async ({request, fetch, cookies}) => {
     const body = await request.json();
     try {
-        const res = await fetch(`${SERVER}/api/v1/users/login`, {
+        const res = await fetch(`${PUBLIC_SERVER_URL}/api/v1/users/login`, {
             method: "POST",
             body: JSON.stringify(body),
             headers: {

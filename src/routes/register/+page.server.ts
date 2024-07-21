@@ -22,7 +22,7 @@ export const actions = {
 			const jsoned = await res.json();
 
 			if (jsoned.success) {
-				throw redirect(301, `/login?message=${jsoned?.message || ""}`);
+				throw redirect(301, `/login`);
 			}
 			throw error(res.status,  jsoned.message || res.statusText);
 		}
