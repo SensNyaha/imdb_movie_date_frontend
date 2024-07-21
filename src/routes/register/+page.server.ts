@@ -1,5 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import catchHelper from '$lib/catchHelper';
 
 export const actions = {
 	register: async ({ request, fetch }) => {
@@ -8,24 +9,29 @@ export const actions = {
 		const password = formData.get('password');
 		const username = formData.get('username');
 
-		const res = await fetch(`/api/auth/register`, {
-			method: "POST",
-			body: JSON.stringify({ email, password, username }),
-			headers: {
-				"Content-Type": "application/json"
+		try {
+			const res = await fetch(`/api/auth/register`, {
+				method: "POST",
+				body: JSON.stringify({ email, password, username }),
+				headers: {
+					"Content-Type": "application/json"
+				}
+			});
+
+			if (!res.ok && res.status >= 300 && res.status < 400 ) throw redirect(res.status, res?.headers?.get("location") || "/");
+			const jsoned = await res.json();
+
+			if (jsoned.success) {
+				throw redirect(301, `/login?message=${jsoned?.message || ""}`);
 			}
-		});
-
-		if (!res.ok && res.status >= 300 && res.status < 400 ) throw redirect(res.status, res?.headers?.get("location") || "/");
-		const jsoned = await res.json();
-
-		if (jsoned.success) {
-			throw redirect(301, `/login?message=${jsoned?.message || ""}`);
+			throw error(res.status,  jsoned.message || res.statusText);
 		}
-		throw error(res.status,  jsoned.message || res.statusText);
+		catch (e) {
+			return catchHelper(e);
+		}
 	}
 };
 
-export const load: PageServerLoad = async ({ parent}) => {
+export const load: PageServerLoad = async ({ parent }) => {
 	if ((await parent())?.user?.accessToken) throw redirect(301, "/");
 }

@@ -1,12 +1,15 @@
 <script lang="ts">
-
 	import {  invalidateAll } from '$app/navigation';
 
 	let email = "mwmakarov@bk.ru";
 	let password = "Zoom290798";
 
 	import {page} from "$app/stores";
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
+	import { error } from '@sveltejs/kit';
+	import type { Writable } from 'svelte/store';
+
+	const errorStore: Writable<null | string> = getContext("errorContext");
 
 	onMount(() => {
 		if ($page.url.searchParams.get("message") != null) {
@@ -15,17 +18,26 @@
 	})
 
 </script>
+<!---->
 <form method="POST" action="?/login" on:submit|preventDefault={async () => {
-	const res = await fetch("api/auth/login", {
-		method: "POST",
-		body: JSON.stringify({email, password}),
-		headers: {
-			"Content-Type": "application/json",
+		try {
+			const res = await fetch("/api/auth/login", {
+				method: "POST",
+				body: JSON.stringify({email, password}),
+				headers: {
+					"Content-Type": "application/json",
+				}
+			});
+			const jsoned = await res.json();
+			if (res.ok) {
+				await invalidateAll();
+			} else {
+				throw error(res.status, jsoned.message || res.statusText);
+			}
+		} catch (e) {
+			errorStore.set("Error while loging out: " + (e?.body?.message || e.message || ""));
+			setTimeout(() => errorStore.set(""), 2000)
 		}
-	});
-	if (res.ok) {
-		await invalidateAll();
-	}
 }}>
 	<input type="text" bind:value={email} name="email" required>
 	<input type="password" bind:value={password} name="password" required>

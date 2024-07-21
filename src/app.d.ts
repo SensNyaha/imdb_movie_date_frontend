@@ -7,8 +7,7 @@ declare global {
 			accessToken?: string;
 		}
 		interface PageData {
-			user?: object,
-			pathname?: string
+			user?: object | null,
 		}
 		// interface PageState {}
 		// interface Platform {}

@@ -10,11 +10,11 @@
 
 	onMount(async () => {
 		if ($page.url.searchParams.get("link") != null) {
-			const res = await fetch($page.url.searchParams.get("link"));
+			const res = await fetch($page.url.searchParams.get("link") as string);
 
 			const jsoned = await res.json();
 
-				result = jsoned;
+			result = jsoned;
 		}
 	})
 </script>
