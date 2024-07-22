@@ -1,4 +1,4 @@
-import { error, json, redirect, type RequestHandler } from '@sveltejs/kit';
+import { error, redirect, type RequestHandler } from '@sveltejs/kit';
 import { PUBLIC_SERVER_URL } from '$env/static/public';
 import catchHelper from '$lib/catchHelper';
 

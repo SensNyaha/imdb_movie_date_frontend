@@ -48,12 +48,33 @@
 			errorStore.set("Error while logging out: " + (customedError?.body?.message || customedError.message || ""));
 		}
 	}
+	async function resendVerificationEmail () {
+		try {
+			const res = await fetch("/api/auth/resend", {
+				method: "POST"
+			});
+			const jsoned = await res.json();
+			if (res.ok) {
+				$statusStore = jsoned.message;
+			} else {
+				throw error(res.status, jsoned.message || res.statusText);
+			}
+		} catch (e) {
+			let customedError = e as CustomError;
+			errorStore.set("Error while trying to resend email verification: " + (customedError?.body?.message || customedError.message || ""));
+		}
+	}
 </script>
 
 {#if data.user}
 	<div>
 		{data.user.username || ""}
 		<img class="avatar" src={data.user.avatar} alt="">
+		{#if !data.user.emailVerified}
+			<form method="POST" action="/api/auth/resend" on:submit|preventDefault={resendVerificationEmail}>
+				<button>Resend Verification Email</button>
+			</form>
+		{/if}
 	</div>
 {/if}
 {#if $errorStore}
@@ -67,8 +88,10 @@
 	</div>
 {/if}
 <a href="/" class:active={$page.url.pathname === "/"}>HOME</a>
-<a href="/login" class:active={$page.url.pathname === "/login"}>LOGIN</a>
-<a href="/register" class:active={$page.url.pathname === "/register"}>REGISTER</a>
+{#if !data.user}
+	<a href="/login" class:active={$page.url.pathname === "/login"}>LOGIN</a>
+	<a href="/register" class:active={$page.url.pathname === "/register"}>REGISTER</a>
+{/if}
 
 {#if data.user}
 	<form method="POST" action="/api/auth/logout" on:submit|preventDefault={logoutHandler}>
