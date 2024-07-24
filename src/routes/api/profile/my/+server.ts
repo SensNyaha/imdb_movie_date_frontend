@@ -18,3 +18,26 @@ export const GET: RequestHandler  = async ({cookies}) => {
 		return catchHelper(e, "Unable to fetch data from the server. May be server is dead:");
 	}
 }
+
+export const PUT: RequestHandler  = async ({cookies, request}) => {
+	try {
+		const body = await request.json();
+		console.log(body)
+		const res = await fetch(`${PUBLIC_SERVER_URL}/api/v1/users/my`, {
+			headers: {
+				"Authorization": `Bearer ${cookies.get("accessToken")}`,
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(body),
+			method: "PUT"
+		})
+		const jsoned = await res.json();
+
+		if (!res.ok) {
+			throw error(res.status, jsoned.message || res.statusText)
+		}
+		return json(jsoned)
+	} catch (e) {
+		return catchHelper(e, "Unable to fetch data from the server. May be server is dead:");
+	}
+}

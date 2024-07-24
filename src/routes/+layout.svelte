@@ -91,6 +91,8 @@
 {#if !data.user}
 	<a href="/login" class:active={$page.url.pathname === "/login"}>LOGIN</a>
 	<a href="/register" class:active={$page.url.pathname === "/register"}>REGISTER</a>
+{:else}
+	<a href="/update" class:active={$page.url.pathname === "/update"}>UPDATE</a>
 {/if}
 
 {#if data.user}
