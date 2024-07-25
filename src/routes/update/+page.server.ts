@@ -1,4 +1,4 @@
-import { error, json, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import catchHelper from '$lib/catchHelper';
 
 interface updateBody {
@@ -8,7 +8,7 @@ interface updateBody {
 }
 
 export const actions = {
-	update: async ({ request, cookies, fetch }) => {
+	update: async ({ request, fetch }) => {
 		const formData = await request.formData();
 		const username = formData.get('username');
 		const fullname = formData.get('fullname');
@@ -28,6 +28,39 @@ export const actions = {
 				headers: {
 					"Content-Type": "application/json"
 				}
+			});
+			const jsoned = await res.json();
+
+			if (jsoned.success) {
+				return jsoned
+			}
+			throw error(res.status,  jsoned.message || res.statusText);
+		} catch (e) {
+			return catchHelper(e);
+		}
+	},
+	"upload-photo": async ({ request, fetch }) => {
+		const formData = await request.formData();
+
+		try {
+			const res = await fetch(`/api/profile/upload-photo`, {
+				method: "POST",
+				body: formData,
+			});
+			const jsoned = await res.json();
+
+			if (jsoned.success) {
+				return jsoned
+			}
+			throw error(res.status,  jsoned.message || res.statusText);
+		} catch (e) {
+			return catchHelper(e);
+		}
+	},
+	"delete-photo": async ({ fetch }) => {
+		try {
+			const res = await fetch(`/api/profile/delete-photo`, {
+				method: "POST",
 			});
 			const jsoned = await res.json();
 
