@@ -38,9 +38,9 @@
 	}
 </script>
 <form method="POST" action="?/register" on:submit|preventDefault={registerHandler}>
-	<input type="text" bind:value={email} name="email" required>
-	<input type="text" bind:value={username} name="username" required>
-	<input type="password" bind:value={password} name="password" required>
+	<input type="text" bind:value={email} name="email" required><br>
+	<input type="text" bind:value={username} name="username" required><br>
+	<input type="password" bind:value={password} name="password" required><br>
 	<button>REGISTER</button>
 </form>
 

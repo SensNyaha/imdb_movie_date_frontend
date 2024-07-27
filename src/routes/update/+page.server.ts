@@ -1,5 +1,7 @@
 import { error } from '@sveltejs/kit';
 import catchHelper from '$lib/catchHelper';
+import { redirect, type ServerLoad } from '@sveltejs/kit';
+
 
 interface updateBody {
 	username?: string | undefined;
@@ -73,3 +75,8 @@ export const actions = {
 		}
 	}
 };
+
+export const load: ServerLoad = async ({parent}) => {
+	const data = await parent();
+	if (!data?.user) throw redirect(307, "/login");
+}

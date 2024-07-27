@@ -23,8 +23,6 @@
 	}
 
 	onMount(() => {
-		if (!data.user) goto("/");
-
 		if (true) {
 			inputAvatar.style.display = "none";
 			inputTrigger.style.display = "block";
@@ -146,6 +144,7 @@ CHANGE YOUR PHOTO IMAGE
 	{/if}
 	<button>UPLOAD PHOTO</button>
 </form>
+
 <form action="?/delete-photo" method="POST" on:submit={deleteAvatar}>
 	<button>DELETE MY CURRENT PHOTO</button>
 </form>

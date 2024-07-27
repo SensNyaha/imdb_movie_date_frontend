@@ -92,6 +92,7 @@
 	<a href="/login" class:active={$page.url.pathname === "/login"}>LOGIN</a>
 	<a href="/register" class:active={$page.url.pathname === "/register"}>REGISTER</a>
 {:else}
+	<a href="/me" class:active={$page.url.pathname === "/me"}>ME</a>
 	<a href="/update" class:active={$page.url.pathname === "/update"}>UPDATE</a>
 {/if}
 

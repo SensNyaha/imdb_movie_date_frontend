@@ -1,8 +1,8 @@
 <script lang="ts">
 	import {  invalidateAll } from '$app/navigation';
 
-	let email = "mwmakarov@bk.ru";
-	let password = "Zoom290798";
+	let email = "";
+	let password = "";
 
 	import { getContext } from 'svelte';
 	import { error } from '@sveltejs/kit';

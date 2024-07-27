@@ -20,6 +20,16 @@ declare global {
 				emailVerified: boolean,
 				fullname: string
 			} | null,
+			fetchedUser: {
+				avatar: string,
+				email: string,
+				_id: string,
+				dates: [object],
+				isSuperAdmin: boolean,
+				country: null | string,
+				emailVerified: boolean,
+				fullname: string
+			} | null,
 			lastServerError?: null | string | undefined
 		}
 		// interface PageState {}
